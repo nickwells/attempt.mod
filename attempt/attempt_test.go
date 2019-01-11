@@ -3,10 +3,12 @@ package attempt_test
 import (
 	"errors"
 	"fmt"
-	"github.com/nickwells/attempt.mod/attempt"
-	"github.com/nickwells/mathutil.mod/mathutil"
 	"testing"
 	"time"
+
+	"github.com/nickwells/attempt.mod/attempt"
+	"github.com/nickwells/mathutil.mod/mathutil"
+	"github.com/nickwells/testhelper.mod/testhelper"
 )
 
 func makeFunc(succeedAt uint64, err error) attempt.Func {
@@ -84,31 +86,23 @@ func TestAttempt(t *testing.T) {
 		start := time.Now()
 		a, err := attempt.Times(tc.count, tc.f, tc.w)
 		end := time.Now()
-		testID := fmt.Sprintf("test %d: %s :", i, tc.testName)
+		tcID := fmt.Sprintf("test %d: %s", i, tc.testName)
 
 		if a != tc.expCount {
-			t.Errorf("%s expected to stop after %d tries actual: %d",
-				testID, tc.expCount, a)
+			t.Log(tcID)
+			t.Logf("\t: expected trials: %d", tc.expCount)
+			t.Logf("\t:   actual trials: %d", a)
+			t.Errorf("\t: unexpected number of attempts")
 		}
 
-		if err == nil && tc.errExpected {
-			t.Errorf("%s expected err: %s but none returned", testID, tc.expErr)
-		} else if err != nil {
-			if !tc.errExpected {
-				t.Errorf("%s no error was expected but we saw: %s",
-					testID, err)
-			} else if err.Error() != tc.expErr {
-				t.Errorf("%s expected err: %s but we saw: %s",
-					testID, tc.expErr, err)
-			}
-		}
+		testhelper.CheckError(t, tcID, err, tc.errExpected, []string{tc.expErr})
 
 		if tc.expDur != 0 {
 			dur := end.Sub(start)
 			pct := 5.0
 			if !mathutil.WithinNPercent(float64(dur), float64(tc.expDur), pct) {
 				diff := (dur - tc.expDur)
-				t.Logf("%s:\n", testID)
+				t.Log(tcID)
 				t.Logf("\t:   actual duration: %6d ms\n",
 					time.Duration(dur.Nanoseconds())/time.Millisecond)
 				t.Logf("\t: expected duration: %6d ms\n",

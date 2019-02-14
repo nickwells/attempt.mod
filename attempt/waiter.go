@@ -2,7 +2,7 @@ package attempt
 
 import "time"
 
-// A Waiter is a source of delay beween the calls to the function being tried.
+// A Waiter is a source of delay between the calls to the function being tried.
 // It's expected that it will call time.Sleep to introduce a delay between
 // repeated calls to the function
 type Waiter interface {

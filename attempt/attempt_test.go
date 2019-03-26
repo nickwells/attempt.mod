@@ -2,7 +2,6 @@ package attempt_test
 
 import (
 	"errors"
-	"fmt"
 	"testing"
 	"time"
 
@@ -21,49 +20,46 @@ func makeFunc(succeedAt uint64, err error) attempt.Func {
 }
 func TestAttempt(t *testing.T) {
 	testCases := []struct {
-		testName    string
-		count       uint64
-		f           attempt.Func
-		w           attempt.Waiter
-		expCount    uint64
-		errExpected bool
-		expErr      string
-		expDur      time.Duration
+		testhelper.ID
+		testhelper.ExpErr
+		count    uint64
+		f        attempt.Func
+		w        attempt.Waiter
+		expCount uint64
+		expDur   time.Duration
 	}{
 		{
-			testName:    "bad count",
-			count:       0,
-			f:           makeFunc(0, nil),
-			w:           attempt.NoDelay{},
-			expCount:    0,
-			errExpected: true,
-			expErr:      attempt.BadAttemptsErr,
+			ID:       testhelper.MkID("bad count"),
+			count:    0,
+			f:        makeFunc(0, nil),
+			w:        attempt.NoDelay{},
+			expCount: 0,
+			ExpErr:   testhelper.MkExpErr(attempt.BadAttemptsErr),
 		},
 		{
-			testName: "succeed at first attempt",
+			ID:       testhelper.MkID("succeed at first attempt"),
 			count:    1,
 			f:        makeFunc(1, errors.New("error")),
 			w:        attempt.NoDelay{},
 			expCount: 1,
 		},
 		{
-			testName: "succeed at nth attempt",
+			ID:       testhelper.MkID("succeed at nth attempt"),
 			count:    9,
 			f:        makeFunc(3, errors.New("error")),
 			w:        attempt.NoDelay{},
 			expCount: 3,
 		},
 		{
-			testName:    "fail",
-			count:       2,
-			f:           makeFunc(3, errors.New("error")),
-			w:           attempt.NoDelay{},
-			expCount:    2,
-			errExpected: true,
-			expErr:      "error",
+			ID:       testhelper.MkID("fail"),
+			count:    2,
+			f:        makeFunc(3, errors.New("error")),
+			w:        attempt.NoDelay{},
+			expCount: 2,
+			ExpErr:   testhelper.MkExpErr("error"),
 		},
 		{
-			testName: "with FixedDelay",
+			ID:       testhelper.MkID("with FixedDelay"),
 			count:    101,
 			f:        makeFunc(100, errors.New("error")),
 			w:        attempt.NewFixedDelay(10 * time.Millisecond),
@@ -71,9 +67,9 @@ func TestAttempt(t *testing.T) {
 			expDur:   99 * 10 * time.Millisecond,
 		},
 		{
-			testName: "with DblDelay",
-			count:    101,
-			f:        makeFunc(100, errors.New("error")),
+			ID:    testhelper.MkID("with DblDelay"),
+			count: 101,
+			f:     makeFunc(100, errors.New("error")),
 			w: attempt.NewDblDelay(
 				time.Millisecond,
 				5*time.Millisecond),
@@ -82,27 +78,26 @@ func TestAttempt(t *testing.T) {
 		},
 	}
 
-	for i, tc := range testCases {
+	for _, tc := range testCases {
 		start := time.Now()
 		a, err := attempt.Times(tc.count, tc.f, tc.w)
 		end := time.Now()
-		tcID := fmt.Sprintf("test %d: %s", i, tc.testName)
 
 		if a != tc.expCount {
-			t.Log(tcID)
+			t.Log(tc.IDStr())
 			t.Logf("\t: expected trials: %d", tc.expCount)
 			t.Logf("\t:   actual trials: %d", a)
 			t.Errorf("\t: unexpected number of attempts")
 		}
 
-		testhelper.CheckError(t, tcID, err, tc.errExpected, []string{tc.expErr})
+		testhelper.CheckExpErr(t, err, tc)
 
 		if tc.expDur != 0 {
 			dur := end.Sub(start)
 			pct := 5.0
 			if !mathutil.WithinNPercent(float64(dur), float64(tc.expDur), pct) {
 				diff := (dur - tc.expDur)
-				t.Log(tcID)
+				t.Log(tc.IDStr())
 				t.Logf("\t:   actual duration: %6d ms\n",
 					time.Duration(dur.Nanoseconds())/time.Millisecond)
 				t.Logf("\t: expected duration: %6d ms\n",
@@ -120,7 +115,7 @@ func TestAttempt(t *testing.T) {
 
 func BenchmarkTimes(b *testing.B) {
 	for i := 0; i < b.N; i++ {
-		attempt.Times(
+		_, _ = attempt.Times(
 			1001,
 			makeFunc(1000, errors.New("bad")),
 			attempt.NoDelay{})

@@ -1,3 +1,5 @@
+[![GoDoc](https://godoc.org/github.com/nickwells/attempt.mod?status.png)](https://godoc.org/github.com/nickwells/attempt.mod)
+
 # attempt
 Some funcs and types for making multiple attempts with varying waits between.
 

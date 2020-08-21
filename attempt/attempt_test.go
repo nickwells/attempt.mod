@@ -83,12 +83,7 @@ func TestAttempt(t *testing.T) {
 		a, err := attempt.Times(tc.count, tc.f, tc.w)
 		end := time.Now()
 
-		if a != tc.expCount {
-			t.Log(tc.IDStr())
-			t.Logf("\t: expected trials: %d", tc.expCount)
-			t.Logf("\t:   actual trials: %d", a)
-			t.Errorf("\t: unexpected number of attempts")
-		}
+		testhelper.CmpValUint64(t, tc.IDStr(), "trials", a, tc.expCount)
 
 		testhelper.CheckExpErr(t, err, tc)
 

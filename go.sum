@@ -2,3 +2,5 @@ github.com/nickwells/mathutil.mod v1.0.9 h1:z7vVqJLbUbv7fx8vqAW0gnHNzVdnWdK0SemD
 github.com/nickwells/mathutil.mod v1.0.9/go.mod h1:6hmKAS+zzc3yXlmpkO3478ZcCCaKDlFlfvkfkDMJ+rI=
 github.com/nickwells/testhelper.mod v1.4.1 h1:bpd/G2oBzfDOY22eineHAhOMrAmZo3Q80P3gA+Wkz+c=
 github.com/nickwells/testhelper.mod v1.4.1/go.mod h1:Ct/U2PjL0n9hGc+US6uR/s4NxSRI33NM+0ZkrDkG0XI=
+github.com/nickwells/testhelper.mod v1.5.0 h1:6OMbT6WcxohplemSWA6MJmLEjre+qQD8ogLeAhsv6iM=
+github.com/nickwells/testhelper.mod v1.5.0/go.mod h1:Ct/U2PjL0n9hGc+US6uR/s4NxSRI33NM+0ZkrDkG0XI=

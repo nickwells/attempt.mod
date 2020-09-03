@@ -83,7 +83,7 @@ func TestAttempt(t *testing.T) {
 		a, err := attempt.Times(tc.count, tc.f, tc.w)
 		end := time.Now()
 
-		testhelper.CmpValUint64(t, tc.IDStr(), "trials", a, tc.expCount)
+		testhelper.DiffUint64(t, tc.IDStr(), "trials", a, tc.expCount)
 
 		testhelper.CheckExpErr(t, err, tc)
 

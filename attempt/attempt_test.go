@@ -18,6 +18,7 @@ func makeFunc(succeedAt uint64, err error) attempt.Func {
 		return nil
 	}
 }
+
 func TestAttempt(t *testing.T) {
 	testCases := []struct {
 		testhelper.ID

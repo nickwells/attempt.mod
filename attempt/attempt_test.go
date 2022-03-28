@@ -6,8 +6,8 @@ import (
 	"time"
 
 	"github.com/nickwells/attempt.mod/attempt"
-	"github.com/nickwells/mathutil.mod/mathutil"
-	"github.com/nickwells/testhelper.mod/testhelper"
+	"github.com/nickwells/mathutil.mod/v2/mathutil"
+	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
 func makeFunc(succeedAt uint64, err error) attempt.Func {
@@ -84,7 +84,7 @@ func TestAttempt(t *testing.T) {
 		a, err := attempt.Times(tc.count, tc.f, tc.w)
 		end := time.Now()
 
-		testhelper.DiffUint64(t, tc.IDStr(), "trials", a, tc.expCount)
+		testhelper.DiffInt(t, tc.IDStr(), "trials", a, tc.expCount)
 
 		testhelper.CheckExpErr(t, err, tc)
 

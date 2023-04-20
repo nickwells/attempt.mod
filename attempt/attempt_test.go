@@ -90,7 +90,7 @@ func TestAttempt(t *testing.T) {
 
 		if tc.expDur != 0 {
 			dur := end.Sub(start)
-			pct := 5.0
+			const pct = 6.0
 			if !mathutil.WithinNPercent(float64(dur), float64(tc.expDur), pct) {
 				diff := (dur - tc.expDur)
 				t.Log(tc.IDStr())

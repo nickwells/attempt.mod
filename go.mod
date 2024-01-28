@@ -1,10 +1,12 @@
 module github.com/nickwells/attempt.mod
 
 require (
-	github.com/nickwells/mathutil.mod/v2 v2.3.0
+	github.com/nickwells/mathutil.mod/v2 v2.4.0
 	github.com/nickwells/testhelper.mod/v2 v2.3.0
 )
 
-require golang.org/x/exp v0.0.0-20230905200255-921286631fa9 // indirect
+require golang.org/x/exp v0.0.0-20240119083558-1b970713d09a // indirect
 
-go 1.18
+go 1.21
+
+toolchain go1.21.0

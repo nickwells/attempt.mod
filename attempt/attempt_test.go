@@ -92,9 +92,22 @@ func TestAttempt(t *testing.T) {
 
 		if tc.expDur != 0 {
 			dur := end.Sub(start)
+			diff := (dur - tc.expDur)
+
+			if diff < 0 {
+				t.Log(tc.IDStr())
+				t.Logf("\t:   actual duration: %6d ms\n",
+					time.Duration(dur.Nanoseconds())/time.Millisecond)
+				t.Logf("\t: expected duration: %6d ms\n",
+					time.Duration(tc.expDur.Nanoseconds())/time.Millisecond)
+				t.Error("\t: finished sooner than expected")
+
+				continue
+			}
+
 			const pct = 6.0
+
 			if !mathutil.WithinNPercent(float64(dur), float64(tc.expDur), pct) {
-				diff := (dur - tc.expDur)
 				t.Log(tc.IDStr())
 				t.Logf("\t:   actual duration: %6d ms\n",
 					time.Duration(dur.Nanoseconds())/time.Millisecond)
@@ -103,8 +116,7 @@ func TestAttempt(t *testing.T) {
 				t.Logf("\t:        difference: %9d µs (%5.1f%%)\n",
 					diff/time.Microsecond,
 					100.0*float64(diff)/float64(tc.expDur))
-				t.Errorf(
-					"\t: difference is not within %.1f%% of expected value",
+				t.Errorf("\t: difference is more than %.1f%% of expected value",
 					pct)
 			}
 		}

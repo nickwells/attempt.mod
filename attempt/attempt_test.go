@@ -15,11 +15,13 @@ func makeFunc(succeedAt uint64, err error) attempt.Func {
 		if t < succeedAt {
 			return err
 		}
+
 		return nil
 	}
 }
 
 func TestAttempt(t *testing.T) {
+	delayUnit := time.Millisecond * 50
 	testCases := []struct {
 		testhelper.ID
 		testhelper.ExpErr
@@ -61,21 +63,21 @@ func TestAttempt(t *testing.T) {
 		},
 		{
 			ID:       testhelper.MkID("with FixedDelay"),
-			count:    101,
-			f:        makeFunc(100, errors.New("error")),
-			w:        attempt.NewFixedDelay(10 * time.Millisecond),
-			expCount: 100,
-			expDur:   99 * 10 * time.Millisecond,
+			count:    11,
+			f:        makeFunc(10, errors.New("error")),
+			w:        attempt.NewFixedDelay(delayUnit),
+			expCount: 10,
+			expDur:   9 * delayUnit,
 		},
 		{
 			ID:    testhelper.MkID("with DblDelay"),
-			count: 101,
-			f:     makeFunc(100, errors.New("error")),
+			count: 11,
+			f:     makeFunc(10, errors.New("error")),
 			w: attempt.NewDblDelay(
-				time.Millisecond,
-				5*time.Millisecond),
-			expCount: 100,
-			expDur:   time.Millisecond * ((1 + 2 + 4) + ((99 - 3) * 5)),
+				delayUnit,
+				5*delayUnit),
+			expCount: 10,
+			expDur:   delayUnit * ((1 + 2 + 4) + ((9 - 3) * 5)),
 		},
 	}
 

@@ -1,6 +1,6 @@
 package attempt
 
-import "fmt"
+import "errors"
 
 // BadAttemptsErr is the error that will be returned if you pass a zero count
 // to Times
@@ -16,8 +16,9 @@ type Func func(trial uint64) error
 // up. After each failed attempt it will call w.Wait()
 func Times(count uint64, f Func, w Waiter) (uint64, error) {
 	if count == 0 {
-		return 0, fmt.Errorf(BadAttemptsErr)
+		return 0, errors.New(BadAttemptsErr)
 	}
+
 	return attemptImpl(count, f, w)
 }
 

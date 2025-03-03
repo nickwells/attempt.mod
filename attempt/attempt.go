@@ -31,18 +31,23 @@ func Forever(f Func, w Waiter) (uint64, error) {
 
 func attemptImpl(count uint64, f Func, w Waiter) (uint64, error) {
 	var i uint64
+
 	var err error
 
 	for {
 		i++
+
 		err = f(i)
 		if err == nil {
 			break
 		}
+
 		if count > 0 && i >= count {
 			break
 		}
+
 		w.Wait()
 	}
+
 	return i, err
 }

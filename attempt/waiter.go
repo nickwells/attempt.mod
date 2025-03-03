@@ -36,10 +36,10 @@ const (
 // and maximum waits set to the given parameters. If either of the values is
 // less than or equal to zero then it will be set to the default value when
 // it is first used
-func NewDblDelay(first, max time.Duration) *DblDelay {
+func NewDblDelay(first, maxDelay time.Duration) *DblDelay {
 	return &DblDelay{
 		firstDelay: first,
-		maxDelay:   max,
+		maxDelay:   maxDelay,
 	}
 }
 
@@ -51,11 +51,14 @@ func (w *DblDelay) Wait() {
 		if w.firstDelay <= 0 {
 			w.firstDelay = DfltDblDelayFirst
 		}
+
 		if w.maxDelay <= 0 {
 			w.maxDelay = DfltDblDelayMax
 		}
+
 		w.delay = w.firstDelay
 	}
+
 	if w.delay > w.maxDelay {
 		w.delay = w.maxDelay
 	}

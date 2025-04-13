@@ -124,7 +124,7 @@ func TestAttempt(t *testing.T) {
 }
 
 func BenchmarkTimes(b *testing.B) {
-	for range b.N {
+	for b.Loop() {
 		_, _ = attempt.Times(
 			1001,
 			makeFunc(1000, errors.New("bad")),

@@ -3,10 +3,10 @@ package attempt_test
 import (
 	"errors"
 	"testing"
+	"testing/synctest"
 	"time"
 
 	"github.com/nickwells/attempt.mod/attempt"
-	"github.com/nickwells/mathutil.mod/v2/mathutil"
 	"github.com/nickwells/testhelper.mod/v2/testhelper"
 )
 
@@ -82,44 +82,20 @@ func TestAttempt(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
-		start := time.Now()
-		a, err := attempt.Times(tc.count, tc.f, tc.w)
-		end := time.Now()
+		synctest.Test(t, func(t *testing.T) {
+			start := time.Now()
+			a, err := attempt.Times(tc.count, tc.f, tc.w)
+			end := time.Now()
 
-		testhelper.DiffInt(t, tc.IDStr(), "trials", a, tc.expCount)
+			testhelper.DiffInt(t, tc.IDStr(), "trials", a, tc.expCount)
 
-		testhelper.CheckExpErr(t, err, tc)
+			testhelper.CheckExpErr(t, err, tc)
 
-		if tc.expDur != 0 {
-			dur := end.Sub(start)
-			diff := (dur - tc.expDur)
-
-			if diff < 0 {
-				t.Log(tc.IDStr())
-				t.Logf("\t:   actual duration: %6d ms\n",
-					time.Duration(dur.Nanoseconds())/time.Millisecond)
-				t.Logf("\t: expected duration: %6d ms\n",
-					time.Duration(tc.expDur.Nanoseconds())/time.Millisecond)
-				t.Error("\t: finished sooner than expected")
-
-				continue
+			if tc.expDur != 0 {
+				testhelper.DiffTime(t, tc.IDStr(), "end time",
+					start.Add(tc.expDur), end)
 			}
-
-			const pct = 6.0
-
-			if !mathutil.WithinNPercent(float64(dur), float64(tc.expDur), pct) {
-				t.Log(tc.IDStr())
-				t.Logf("\t:   actual duration: %6d ms\n",
-					time.Duration(dur.Nanoseconds())/time.Millisecond)
-				t.Logf("\t: expected duration: %6d ms\n",
-					time.Duration(tc.expDur.Nanoseconds())/time.Millisecond)
-				t.Logf("\t:        difference: %9d µs (%5.1f%%)\n",
-					diff/time.Microsecond,
-					100.0*float64(diff)/float64(tc.expDur))
-				t.Errorf("\t: difference is more than %.1f%% of expected value",
-					pct)
-			}
-		}
+		})
 	}
 }
 

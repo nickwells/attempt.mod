@@ -1,4 +1,4 @@
-github.com/nickwells/testhelper.mod/v2 v2.4.3 h1:qMMfxdVNdx2+lrAVeL2H2hZtPSBZNiJIs8PO819xHxA=
-github.com/nickwells/testhelper.mod/v2 v2.4.3/go.mod h1:VKA7xmqXuyzdnDRWUJlKiOte5sDUfGDYyDa6Sk0sF7w=
-golang.org/x/exp v0.0.0-20251209150349-8475f28825e9 h1:MDfG8Cvcqlt9XXrmEiD4epKn7VJHZO84hejP9Jmp0MM=
-golang.org/x/exp v0.0.0-20251209150349-8475f28825e9/go.mod h1:EPRbTFwzwjXj9NpYyyrvenVh9Y+GFeEvMNh7Xuz7xgU=
+github.com/nickwells/testhelper.mod/v2 v2.5.0 h1:YJVxIs/RW9D+KkltTM1J01dyDYx0n+G6lsuKZ0ROzbY=
+github.com/nickwells/testhelper.mod/v2 v2.5.0/go.mod h1:MKIJiDiPNgn4r7/46XG5aclWV0eu0mlSqzsPLadi2V8=
+golang.org/x/exp v0.0.0-20260312153236-7ab1446f8b90 h1:jiDhWWeC7jfWqR9c/uplMOqJ0sbNlNWv0UkzE0vX1MA=
+golang.org/x/exp v0.0.0-20260312153236-7ab1446f8b90/go.mod h1:xE1HEv6b+1SCZ5/uscMRjUBKtIxworgEcEi+/n9NQDQ=
